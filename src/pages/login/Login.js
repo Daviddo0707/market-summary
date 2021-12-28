@@ -16,7 +16,7 @@ const Login = () => {
         if (getCookie("token")) {
             navigate("/markets");
         }
-    }, [])
+    }, [navigate])
     const {control, handleSubmit} = useForm({
         defaultValues: {
             email: '',

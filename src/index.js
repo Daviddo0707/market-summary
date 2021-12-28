@@ -4,10 +4,8 @@ import './index.css';
 import App from './App';
 
 ReactDOM.render(
-    <Suspense fallback={'/'}>
-        <React.StrictMode>
+    <Suspense fallback={<div>Loading...</div>}>
             <App/>
-        </React.StrictMode>
     </Suspense>,
     document.getElementById('root')
 );

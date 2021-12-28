@@ -1,14 +1,14 @@
 import {useEffect, useState} from "react";
-import {getCookie} from "../../helpers/helpers";
+import {getCookie, tableColumns} from "../../helpers/helpers";
 import {DataGrid} from '@mui/x-data-grid';
 import {useNavigate} from "react-router-dom";
 import baseServerApi from "../../api/baseServerApi";
 import MarketDialog from './dialog/MarketDialog';
+import _ from "lodash";
 
 const MarketsList = () => {
     const navigate = useNavigate();
     const [marketList, setMarketList] = useState([]);
-    const [openDialog, setOpenDialog] = useState(false);
     const [selectedMarket, setSelectedMarket] = useState({});
     const [error, setError] = useState(false);
 
@@ -26,15 +26,8 @@ const MarketsList = () => {
             }
         }
         getMarketSummary();
-    }, []);
+    }, [navigate]);
 
-    const tableColumns = [
-        {field: 'shortName', headerName: 'Name', width: 400},
-        {field: 'market', headerName: 'Market', width: 250},
-        {field: 'exchange', headerName: 'Exchange', width: 200},
-        {field: 'marketPrice', headerName: 'Market Price', width: 200},
-        {field: 'symbol', headerName: 'Market Symbol', width: 200}
-    ];
 
     const tableRows = marketList?.map((market) => {
         return {
@@ -50,11 +43,10 @@ const MarketsList = () => {
     const handleRowClick = (row) => {
         const selected = marketList.filter((market) => market.symbol === row.id);
         setSelectedMarket(selected[0]);
-        setOpenDialog(true);
     }
 
     const handleCloseDialog = () => {
-        setOpenDialog(false);
+        setSelectedMarket({})
     };
 
     return (
@@ -65,7 +57,7 @@ const MarketsList = () => {
                     columns={tableColumns}
                     onRowClick={(row) => handleRowClick(row)}
                 />
-                <MarketDialog openDialog={openDialog} market={selectedMarket}
+                <MarketDialog openDialog={!_.isEmpty(selectedMarket)} market={selectedMarket}
                               onCloseDialog={handleCloseDialog}/>
             </div>) : (<h1>Error occurred while fetching data, try again later.</h1>)}
         </div>
